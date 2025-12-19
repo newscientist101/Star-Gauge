@@ -30,6 +30,38 @@ const gridData = [
     ['亲','刚','柔','有','女','为','贱','人','房','幽','处','己','悯','微','身','长','路','悲','旷','感','生','民','梁','山','殊','塞','隔','河','津']
 ];
 
+function getCharColor(row, col) {
+    const size = 29;
+    const center = 14;
+
+    if (row === 0 || row === size - 1 || col === 0 || col === size - 1 || row === center || col === center) {
+        return 'red';
+    }
+
+    const x = col > center ? size - 1 - col : col;
+    const y = row > center ? size - 1 - row : row;
+
+    if (y >= 1 && y <= 6 && x >= 1 && x <= 6) {
+        if (y === 1 || y === 6 || x === 1 || x === 6 || x === y || x + y === 7) {
+            return 'black';
+        }
+    }
+
+    if (y >= 8 && y <= 13 && x >= 8 && x <= 13) {
+        const localX = x - 7;
+        const localY = y - 7;
+        if (localY === 1 || localY === 6 || localX === 1 || localX === 6 || localX === localY || localX + localY === 7) {
+            return 'purple';
+        }
+    }
+
+    if (y >= 11 && y <= 13 && x >= 11 && x <= 13) {
+        return 'yellow';
+    }
+
+    return 'blue';
+}
+
 function generateGrid() {
     const gridElement = document.getElementById('grid');
     gridData.forEach((row, rowIndex) => {
@@ -39,6 +71,12 @@ function generateGrid() {
             cell.textContent = char;
             cell.dataset.row = rowIndex;
             cell.dataset.col = colIndex;
+
+            const colorClass = getCharColor(rowIndex, colIndex);
+            if (colorClass) {
+                cell.classList.add(colorClass);
+            }
+
             gridElement.appendChild(cell);
         });
     });
@@ -194,33 +232,69 @@ function highlightPoemPath(methodName, poemName) {
  * A path segment is an object with a start coordinate [row, col], a direction, and a length.
  */
 const poemRules = {
-  '四围四角红书读法': {
-    '仁智至惨伤 (Clockwise from Top-Right)': [
+  'Four Corners Reading': {
+    'Top-Right Quadrant (Clockwise)': [
       { start: [0, 28], direction: 'down', length: 7 },
       { start: [7, 28], direction: 'left', length: 7 },
       { start: [7, 21], direction: 'up', length: 7 },
       { start: [0, 21], direction: 'right', length: 7 }
     ],
-    '贞志至虞唐 (Clockwise from Bottom-Right)': [
+    'Bottom-Right Quadrant (Clockwise)': [
       { start: [28, 28], direction: 'left', length: 7 },
       { start: [28, 21], direction: 'up', length: 7 },
       { start: [21, 21], direction: 'right', length: 7 },
       { start: [21, 28], direction: 'down', length: 7 }
     ],
-    '钦所至荣章 (Clockwise from Top-Left)': [
+    'Top-Left Quadrant (Clockwise)': [
       { start: [0, 0], direction: 'right', length: 7 },
       { start: [0, 7], direction: 'down', length: 7 },
       { start: [7, 7], direction: 'left', length: 7 },
       { start: [7, 0], direction: 'up', length: 7 }
     ],
-    '臣贤至流光 (Clockwise from Bottom-Left)': [
+    'Bottom-Left Quadrant (Clockwise)': [
       { start: [28, 0], direction: 'up', length: 7 },
       { start: [21, 0], direction: 'right', length: 7 },
       { start: [21, 7], direction: 'down', length: 7 },
       { start: [28, 7], direction: 'left', length: 7 }
     ]
   },
-  // Other reading methods can be added here.
+  'Middle Well Reading': {
+    'Vertical & Horizontal': [
+      { start: [7, 21], direction: 'up', length: 7 },
+      { start: [8, 21], direction: 'down', length: 7 },
+      { start: [21, 21], direction: 'left', length: 7 },
+      { start: [21, 8], direction: 'right', length: 7 }
+    ]
+  },
+  'Black Book Reading': {
+    'Top-Right Perimeter': [
+        { start: [1, 27], direction: 'left', length: 6 },
+        { start: [2, 22], direction: 'down', length: 5 },
+        { start: [6, 22], direction: 'right', length: 6 },
+        { start: [1, 22], direction: 'down', length: 5 }
+    ]
+  },
+  'Blue Book Reading': {
+    'Top-Center Horizontal': [
+        { start: [1, 13], direction: 'right', length: 4 },
+        { start: [1, 16], direction: 'right', length: 4 }
+    ]
+  },
+  'Purple Book Reading': {
+    'Top-Right Corner': [
+        { start: [8, 26], direction: 'left', length: 5 },
+        { start: [9, 22], direction: 'down', length: 4 },
+        { start: [13, 22], direction: 'right', length: 5 },
+        { start: [8, 22], direction: 'down', length: 4 }
+    ]
+  },
+  'Yellow Book Reading': {
+    'Center Square': [
+        { start: [11, 13], direction: 'right', length: 3 },
+        { start: [12, 13], direction: 'right', length: 3 },
+        { start: [13, 13], direction: 'right', length: 3 }
+    ]
+  }
 };
 
 function getPoem(methodName, poemName) {
