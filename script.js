@@ -1,0 +1,374 @@
+const gridData = [
+    ['琴','清','流','楚','激','弦','商','秦','曲','发','声','悲','摧','藏','音','和','咏','思','惟','空','堂','心','忧','增','慕','怀','惨','伤','仁'],
+    ['芳','廊','东','步','阶','西','游','王','姿','淑','窈','窕','伯','邵','南','周','风','兴','自','后','妃','荒','经','离','所','怀','叹','嗟','智'],
+    ['兰','休','桃','林','阴','翳','桑','怀','归','思','广','河','女','卫','郑','楚','樊','厉','节','中','闱','淫','遐','旷','路','伤','中','情','怀'],
+    ['凋','翔','飞','燕','巢','双','鸠','土','迤','逶','路','遐','志','咏','歌','长','叹','不','能','奋','飞','妄','清','帏','房','君','无','家','德'],
+    ['茂','流','泉','清','水','激','扬','眷','颀','其','人','硕','兴','齐','商','双','发','歌','我','衮','衣','想','华','饰','容','朗','镜','明','圣'],
+    ['熙','长','君','思','悲','好','仇','旧','蕤','葳','桀','翠','荣','曜','流','华','观','冶','容','为','谁','感','英','曜','珠','光','纷','葩','虞'],
+    ['阳','愁','叹','发','容','摧','伤','乡','悲','情','我','感','伤','情','徵','宫','羽','同','声','相','追','所','多','思','感','谁','为','荣','唐'],
+    ['春','方','殊','离','仁','君','荣','身','苦','惟','艰','生','患','多','殷','忧','缠','情','将','如','何','钦','苍','穹','誓','终','笃','志','贞'],
+    ['墙','禽','心','滨','均','深','身','加','怀','忧','是','婴','藻','文','繁','虎','龙','宁','自','感','思','岑','形','荧','城','荣','明','庭','妙'],
+    ['面','伯','改','汉','物','日','我','兼','思','何','漫','漫','荣','曜','华','雕','旌','孜','孜','伤','情','幽','未','犹','倾','苟','难','闱','显'],
+    ['殊','在','者','之','品','润','乎','愁','苦','艰','是','丁','丽','壮','观','饰','容','侧','君','在','时','岩','在','炎','在','不','受','乱','华'],
+    ['意','诚','惑','步','育','浸','集','悴','我','生','何','冤','充','颜','曜','绣','衣','梦','想','劳','形','峻','慎','盛','戒','义','消','作','重'],
+    ['感','故','昵','飘','施','愆','殃','少','章','时','桑','诗','端','无','终','始','诗','仁','颜','贞','寒','嵯','深','兴','后','姬','源','人','荣'],
+    ['故','遗','亲','飘','生','思','愆','精','徽','盛','医','风','比','平','始','璇','情','贤','丧','物','岁','峨','虑','渐','孽','班','祸','谗','章'],
+    ['新','旧','闻','离','天','罪','辜','神','恨','昭','盛','兴','作','苏','心','玑','明','别','改','知','识','深','微','至','嬖','女','因','奸','臣'],
+    ['霜','废','远','微','地','积','何','遐','微','业','孟','鹿','丽','氏','诗','图','显','行','华','终','凋','渊','察','大','赵','婕','所','佞','贤'],
+    ['水','故','离','隔','德','怨','因','幽','元','倾','宣','鸣','辞','理','兴','义','怨','士','容','始','松','重','远','伐','氏','好','恃','凶','惟'],
+    ['齐','君','殊','乔','贵','其','备','旷','悼','思','伤','怀','日','往','感','年','衰','念','是','旧','愆','涯','祸','用','飞','辞','恣','害','圣'],
+    ['杰','子','我','木','平','根','当','远','叹','水','感','悲','思','忧','远','劳','情','谁','为','独','居','经','在','昭','燕','辇','极','我','配'],
+    ['志','惟','同','谁','均','难','苦','离','戚','戚','情','哀','慕','岁','殊','叹','时','贱','女','怀','欢','网','防','青','实','汉','骄','忠','英'],
+    ['清','新','衾','阴','匀','寻','辛','凤','知','我','者','谁','世','异','浮','寄','倾','鄙','贱','何','如','罗','萌','青','生','成','盈','贞','皇'],
+    ['纯','贞','志','一','专','所','当','麟','沙','流','颓','逝','异','浮','沉','华','英','翳','曜','潜','阳','林','西','昭','景','薄','榆','桑','伦'],
+    ['望','微','精','感','通','明','神','龙','驰','若','然','倏','逝','惟','时','年','殊','白','日','西','移','光','滋','愚','谗','漫','顽','凶','匹'],
+    ['谁','云','浮','寄','身','轻','飞','昭','亏','不','盈','无','倏','必','盛','有','衰','无','日','不','陂','流','蒙','谦','退','休','孝','慈','离'],
+    ['思','辉','光','饬','桀','殊','文','德','离','忠','体','一','达','心','意','志','殊','愤','激','何','施','电','疑','危','远','家','和','雍','飘'],
+    ['想','群','离','散','妾','孤','遗','怀','仪','容','仰','俯','荣','华','丽','饰','身','将','无','谁','为','逝','容','节','敦','贞','淑','思','浮'],
+    ['怀','悲','哀','声','殊','乖','分','圣','赀','何','情','忧','感','惟','哀','志','节','上','通','神','祇','推','持','所','贞','记','自','恭','江'],
+    ['所','春','伤','应','翔','雁','归','皇','辞','成','者','作','体','下','遗','葑','菲','采','者','无','差','生','从','是','敬','孝','为','基','湘'],
+    ['亲','刚','柔','有','女','为','贱','人','房','幽','处','己','悯','微','身','长','路','悲','旷','感','生','民','梁','山','殊','塞','隔','河','津']
+];
+
+function getCharColor(row, col) {
+    const size = 29;
+    const center = 14;
+
+    if (row === 0 || row === size - 1 || col === 0 || col === size - 1 || row === center || col === center) {
+        return 'red';
+    }
+
+    const x = col > center ? size - 1 - col : col;
+    const y = row > center ? size - 1 - row : row;
+
+    if (y >= 1 && y <= 6 && x >= 1 && x <= 6) {
+        if (y === 1 || y === 6 || x === 1 || x === 6 || x === y || x + y === 7) {
+            return 'black';
+        }
+    }
+
+    if (y >= 8 && y <= 13 && x >= 8 && x <= 13) {
+        const localX = x - 7;
+        const localY = y - 7;
+        if (localY === 1 || localY === 6 || localX === 1 || localX === 6 || localX === localY || localX + localY === 7) {
+            return 'purple';
+        }
+    }
+
+    if (y >= 11 && y <= 13 && x >= 11 && x <= 13) {
+        return 'yellow';
+    }
+
+    return 'blue';
+}
+
+function generateGrid() {
+    const gridElement = document.getElementById('grid');
+    gridData.forEach((row, rowIndex) => {
+        row.forEach((char, colIndex) => {
+            const cell = document.createElement('div');
+            cell.classList.add('grid-cell');
+            cell.textContent = char;
+            cell.dataset.row = rowIndex;
+            cell.dataset.col = colIndex;
+
+            const colorClass = getCharColor(rowIndex, colIndex);
+            if (colorClass) {
+                cell.classList.add(colorClass);
+            }
+
+            gridElement.appendChild(cell);
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    generateGrid();
+
+    const settingsModal = document.getElementById('settings-modal');
+    const settingsBtn = document.getElementById('settings-btn');
+    const closeBtn = document.querySelector('.close-btn');
+    const saveApiKeyBtn = document.getElementById('save-api-key-btn');
+    const apiKeyInput = document.getElementById('api-key-input');
+
+    // Load saved API key from localStorage
+    const savedApiKey = localStorage.getItem('googleApiKey');
+    if (savedApiKey) {
+        apiKeyInput.value = savedApiKey;
+    }
+
+    // Open the modal
+    settingsBtn.onclick = () => {
+        settingsModal.style.display = "block";
+    }
+
+    // Close the modal via the 'x'
+    closeBtn.onclick = () => {
+        settingsModal.style.display = "none";
+    }
+
+    // Close the modal by clicking outside of it
+    window.onclick = (event) => {
+        if (event.target == settingsModal) {
+            settingsModal.style.display = "none";
+        }
+    }
+
+    // Save the API key
+    saveApiKeyBtn.onclick = () => {
+        const apiKey = apiKeyInput.value.trim();
+        if (apiKey) {
+            localStorage.setItem('googleApiKey', apiKey);
+            alert('API Key saved successfully!');
+            settingsModal.style.display = "none";
+        } else {
+            alert('API Key field cannot be empty.');
+        }
+    };
+
+    const poemSelect = document.getElementById('poem-select');
+    const generateBtn = document.getElementById('generate-btn');
+    const poemDisplay = document.getElementById('poem-display');
+
+    // Function to populate the dropdown
+    function populatePoemSelector() {
+        for (const methodName in poemRules) {
+            const optgroup = document.createElement('optgroup');
+            optgroup.label = methodName;
+            for (const poemName in poemRules[methodName]) {
+                const option = document.createElement('option');
+                option.textContent = poemName;
+                option.dataset.method = methodName;
+                option.dataset.poem = poemName;
+                optgroup.appendChild(option);
+            }
+            poemSelect.appendChild(optgroup);
+        }
+    }
+
+    // Populate the dropdown on load
+    populatePoemSelector();
+
+    // Event listener for the generate button
+    generateBtn.onclick = () => {
+        const selectedOption = poemSelect.options[poemSelect.selectedIndex];
+        if (!selectedOption) {
+            poemDisplay.textContent = 'Please select a poem.';
+            return;
+        }
+
+        const methodName = selectedOption.dataset.method;
+        const poemName = selectedOption.dataset.poem;
+
+        const poemText = getPoem(methodName, poemName);
+
+        // Clear previous highlights
+        document.querySelectorAll('.grid-cell.selected').forEach(cell => {
+            cell.classList.remove('selected');
+        });
+
+        // Highlight the new path
+        highlightPoemPath(methodName, poemName);
+
+        // Display the generated poem
+        poemDisplay.textContent = poemText;
+    };
+
+    const translateBtn = document.getElementById('translate-btn');
+    const translationDisplay = document.getElementById('translation-display');
+
+    translateBtn.onclick = async () => {
+        const poemText = poemDisplay.textContent;
+        if (!poemText) {
+            translationDisplay.textContent = 'First, generate a poem to translate.';
+            return;
+        }
+
+        const apiKey = localStorage.getItem('googleApiKey');
+        if (!apiKey) {
+            translationDisplay.textContent = 'Please save your API key in the settings menu first.';
+            return;
+        }
+
+        translationDisplay.textContent = 'Translating...';
+        const translatedText = await translateText(poemText, apiKey);
+        translationDisplay.textContent = translatedText;
+    };
+});
+
+function highlightPoemPath(methodName, poemName) {
+    const poemPath = poemRules[methodName]?.[poemName];
+    if (!poemPath) return;
+
+    poemPath.forEach(segment => {
+        let [row, col] = segment.start;
+        for (let i = 0; i < segment.length; i++) {
+            let cellToHighlight;
+            switch (segment.direction) {
+                case 'down':
+                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row + i}"][data-col="${col}"]`);
+                    break;
+                case 'up':
+                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row - i}"][data-col="${col}"]`);
+                    break;
+                case 'left':
+                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row}"][data-col="${col - i}"]`);
+                    break;
+                case 'right':
+                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row}"][data-col="${col + i}"]`);
+                    break;
+            }
+            if (cellToHighlight) {
+                cellToHighlight.classList.add('selected');
+            }
+        }
+    });
+}
+
+/*
+ * Data structure for poem generation rules.
+ * Each key is a reading method. Each method contains objects for individual poems.
+ * Each poem is an array of path segments.
+ * A path segment is an object with a start coordinate [row, col], a direction, and a length.
+ */
+const poemRules = {
+  'Four Corners Reading': {
+    'Top-Right Quadrant (Clockwise)': [
+      { start: [0, 28], direction: 'down', length: 7 },
+      { start: [7, 28], direction: 'left', length: 7 },
+      { start: [7, 21], direction: 'up', length: 7 },
+      { start: [0, 21], direction: 'right', length: 7 }
+    ],
+    'Bottom-Right Quadrant (Clockwise)': [
+      { start: [28, 28], direction: 'left', length: 7 },
+      { start: [28, 21], direction: 'up', length: 7 },
+      { start: [21, 21], direction: 'right', length: 7 },
+      { start: [21, 28], direction: 'down', length: 7 }
+    ],
+    'Top-Left Quadrant (Clockwise)': [
+      { start: [0, 0], direction: 'right', length: 7 },
+      { start: [0, 7], direction: 'down', length: 7 },
+      { start: [7, 7], direction: 'left', length: 7 },
+      { start: [7, 0], direction: 'up', length: 7 }
+    ],
+    'Bottom-Left Quadrant (Clockwise)': [
+      { start: [28, 0], direction: 'up', length: 7 },
+      { start: [21, 0], direction: 'right', length: 7 },
+      { start: [21, 7], direction: 'down', length: 7 },
+      { start: [28, 7], direction: 'left', length: 7 }
+    ]
+  },
+  'Middle Well Reading': {
+    'Vertical & Horizontal': [
+      { start: [7, 21], direction: 'up', length: 7 },
+      { start: [8, 21], direction: 'down', length: 7 },
+      { start: [21, 21], direction: 'left', length: 7 },
+      { start: [21, 8], direction: 'right', length: 7 }
+    ]
+  },
+  'Black Book Reading': {
+    'Top-Right Perimeter': [
+        { start: [1, 27], direction: 'left', length: 6 },
+        { start: [2, 22], direction: 'down', length: 5 },
+        { start: [6, 22], direction: 'right', length: 6 },
+        { start: [1, 22], direction: 'down', length: 5 }
+    ]
+  },
+  'Blue Book Reading': {
+    'Top-Center Horizontal': [
+        { start: [1, 13], direction: 'right', length: 4 },
+        { start: [1, 16], direction: 'right', length: 4 }
+    ]
+  },
+  'Purple Book Reading': {
+    'Top-Right Corner': [
+        { start: [8, 26], direction: 'left', length: 5 },
+        { start: [9, 22], direction: 'down', length: 4 },
+        { start: [13, 22], direction: 'right', length: 5 },
+        { start: [8, 22], direction: 'down', length: 4 }
+    ]
+  },
+  'Yellow Book Reading': {
+    'Center Square': [
+        { start: [11, 13], direction: 'right', length: 3 },
+        { start: [12, 13], direction: 'right', length: 3 },
+        { start: [13, 13], direction: 'right', length: 3 }
+    ]
+  }
+};
+
+function getPoem(methodName, poemName) {
+    const poemPath = poemRules[methodName]?.[poemName];
+    if (!poemPath) {
+        return "Poem not found.";
+    }
+
+    let poemText = '';
+    poemPath.forEach(segment => {
+        let [row, col] = segment.start;
+        for (let i = 0; i < segment.length; i++) {
+            let char = '';
+            switch (segment.direction) {
+                case 'down':
+                    char = gridData[row + i][col];
+                    break;
+                case 'up':
+                    char = gridData[row - i][col];
+                    break;
+                case 'left':
+                    char = gridData[row][col - i];
+                    break;
+                case 'right':
+                    char = gridData[row][col + i];
+                    break;
+            }
+            poemText += char;
+        }
+    });
+
+    // Add formatting (line breaks after every 7 characters for this specific poem type)
+    const lines = [];
+    const lineLength = 7;
+    for (let i = 0; i < poemText.length; i += lineLength) {
+        lines.push(poemText.substring(i, i + lineLength));
+    }
+    return lines.join('\n');
+}
+
+async function translateText(text, apiKey) {
+    const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
+    // The API expects the text to be split by newlines to be passed as multiple 'q' values.
+    // However, for simplicity and to maintain poem structure, we'll send it as a single block.
+    // The API should handle newline characters correctly.
+    const body = {
+        q: text,
+        target: 'en',
+        source: 'zh'
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            body: JSON.stringify(body),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Translation API Error:', errorData);
+            return `Translation failed: ${errorData.error.message}`;
+        }
+
+        const data = await response.json();
+        const translatedText = data.data.translations[0].translatedText;
+        // The API often HTML-encodes characters, so we need to decode them.
+        const decodedText = new DOMParser().parseFromString(translatedText, "text/html").documentElement.textContent;
+        return decodedText;
+
+    } catch (error) {
+        console.error('Network error during translation:', error);
+        return 'Error: Could not connect to the translation service.';
+    }
+}
