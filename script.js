@@ -6,7 +6,7 @@ const gridData = [
     ['茂','流','泉','清','水','激','扬','眷','颀','其','人','硕','兴','齐','商','双','发','歌','我','衮','衣','想','华','饰','容','朗','镜','明','圣'],
     ['熙','长','君','思','悲','好','仇','旧','蕤','葳','桀','翠','荣','曜','流','华','观','冶','容','为','谁','感','英','曜','珠','光','纷','葩','虞'],
     ['阳','愁','叹','发','容','摧','伤','乡','悲','情','我','感','伤','情','徵','宫','羽','同','声','相','追','所','多','思','感','谁','为','荣','唐'],
-    ['春','方','殊','离','仁','君','荣','身','苦','惟','艰','生','患','多','殷','忧','缠','情','将','如','何','钦','苍','穹','誓','终','笃','志','贞'],
+    ['春','方','殊','离','仁','君','荣','身','苦','惟','艰','生','患','多','殷','忧','缠','情','将','如','何','钦','苍','穹','誓','终','篤','志','贞'],
     ['墙','禽','心','滨','均','深','身','加','怀','忧','是','婴','藻','文','繁','虎','龙','宁','自','感','思','岑','形','荧','城','荣','明','庭','妙'],
     ['面','伯','改','汉','物','日','我','兼','思','何','漫','漫','荣','曜','华','雕','旌','孜','孜','伤','情','幽','未','犹','倾','苟','难','闱','显'],
     ['殊','在','者','之','品','润','乎','愁','苦','艰','是','丁','丽','壮','观','饰','容','侧','君','在','时','岩','在','炎','在','不','受','乱','华'],
@@ -64,6 +64,7 @@ function getCharColor(row, col) {
 
 function generateGrid() {
     const gridElement = document.getElementById('grid');
+    gridElement.innerHTML = ''; // Clear existing grid
     gridData.forEach((row, rowIndex) => {
         row.forEach((char, colIndex) => {
             const cell = document.createElement('div');
@@ -85,36 +86,25 @@ function generateGrid() {
 document.addEventListener('DOMContentLoaded', () => {
     generateGrid();
 
+    // --- Settings Modal Logic (unchanged) ---
     const settingsModal = document.getElementById('settings-modal');
     const settingsBtn = document.getElementById('settings-btn');
     const closeBtn = document.querySelector('.close-btn');
     const saveApiKeyBtn = document.getElementById('save-api-key-btn');
     const apiKeyInput = document.getElementById('api-key-input');
 
-    // Load saved API key from localStorage
     const savedApiKey = localStorage.getItem('googleApiKey');
     if (savedApiKey) {
         apiKeyInput.value = savedApiKey;
     }
 
-    // Open the modal
-    settingsBtn.onclick = () => {
-        settingsModal.style.display = "block";
-    }
-
-    // Close the modal via the 'x'
-    closeBtn.onclick = () => {
-        settingsModal.style.display = "none";
-    }
-
-    // Close the modal by clicking outside of it
+    settingsBtn.onclick = () => { settingsModal.style.display = "block"; };
+    closeBtn.onclick = () => { settingsModal.style.display = "none"; };
     window.onclick = (event) => {
         if (event.target == settingsModal) {
             settingsModal.style.display = "none";
         }
-    }
-
-    // Save the API key
+    };
     saveApiKeyBtn.onclick = () => {
         const apiKey = apiKeyInput.value.trim();
         if (apiKey) {
@@ -126,53 +116,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- Dynamic Poem Generation Logic ---
     const poemSelect = document.getElementById('poem-select');
-    const generateBtn = document.getElementById('generate-btn');
     const poemDisplay = document.getElementById('poem-display');
+    const gridElement = document.getElementById('grid');
 
-    // Function to populate the dropdown
     function populatePoemSelector() {
+        poemSelect.innerHTML = ''; // Clear existing options
         for (const methodName in poemRules) {
-            const optgroup = document.createElement('optgroup');
-            optgroup.label = methodName;
-            for (const poemName in poemRules[methodName]) {
-                const option = document.createElement('option');
-                option.textContent = poemName;
-                option.dataset.method = methodName;
-                option.dataset.poem = poemName;
-                optgroup.appendChild(option);
-            }
-            poemSelect.appendChild(optgroup);
+            const option = document.createElement('option');
+            option.textContent = methodName;
+            option.value = methodName;
+            poemSelect.appendChild(option);
         }
     }
 
-    // Populate the dropdown on load
     populatePoemSelector();
 
-    // Event listener for the generate button
-    generateBtn.onclick = () => {
-        const selectedOption = poemSelect.options[poemSelect.selectedIndex];
-        if (!selectedOption) {
-            poemDisplay.textContent = 'Please select a poem.';
-            return;
+    gridElement.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('grid-cell')) return;
+
+        const row = parseInt(event.target.dataset.row, 10);
+        const col = parseInt(event.target.dataset.col, 10);
+        const selectedMethod = poemSelect.value;
+        const rule = poemRules[selectedMethod];
+
+        if (rule && rule.isValidStart(row, col)) {
+            const path = rule.getPath(row, col);
+            generatePoemFromPath(path);
         }
-
-        const methodName = selectedOption.dataset.method;
-        const poemName = selectedOption.dataset.poem;
-
-        const poemText = getPoem(methodName, poemName);
-
-        // Clear previous highlights
-        document.querySelectorAll('.grid-cell.selected').forEach(cell => {
-            cell.classList.remove('selected');
-        });
-
-        // Highlight the new path
-        highlightPoemPath(methodName, poemName);
-
-        // Display the generated poem
-        poemDisplay.textContent = poemText;
-    };
+    });
 
     const translateBtn = document.getElementById('translate-btn');
     const translationDisplay = document.getElementById('translation-display');
@@ -183,190 +156,152 @@ document.addEventListener('DOMContentLoaded', () => {
             translationDisplay.textContent = 'First, generate a poem to translate.';
             return;
         }
-
         const apiKey = localStorage.getItem('googleApiKey');
         if (!apiKey) {
             translationDisplay.textContent = 'Please save your API key in the settings menu first.';
             return;
         }
-
         translationDisplay.textContent = 'Translating...';
         const translatedText = await translateText(poemText, apiKey);
         translationDisplay.textContent = translatedText;
     };
 });
 
-function highlightPoemPath(methodName, poemName) {
-    const poemPath = poemRules[methodName]?.[poemName];
-    if (!poemPath) return;
-
-    poemPath.forEach(segment => {
-        let [row, col] = segment.start;
-        for (let i = 0; i < segment.length; i++) {
-            let cellToHighlight;
-            switch (segment.direction) {
-                case 'down':
-                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row + i}"][data-col="${col}"]`);
-                    break;
-                case 'up':
-                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row - i}"][data-col="${col}"]`);
-                    break;
-                case 'left':
-                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row}"][data-col="${col - i}"]`);
-                    break;
-                case 'right':
-                    cellToHighlight = document.querySelector(`.grid-cell[data-row="${row}"][data-col="${col + i}"]`);
-                    break;
-            }
-            if (cellToHighlight) {
-                cellToHighlight.classList.add('selected');
-            }
-        }
-    });
-}
-
-/*
- * Data structure for poem generation rules.
- * Each key is a reading method. Each method contains objects for individual poems.
- * Each poem is an array of path segments.
- * A path segment is an object with a start coordinate [row, col], a direction, and a length.
- */
-const poemRules = {
-  'Four Corners Reading': {
-    'Top-Right Quadrant (Clockwise)': [
-      { start: [0, 28], direction: 'down', length: 7 },
-      { start: [7, 28], direction: 'left', length: 7 },
-      { start: [7, 21], direction: 'up', length: 7 },
-      { start: [0, 21], direction: 'right', length: 7 }
-    ],
-    'Bottom-Right Quadrant (Clockwise)': [
-      { start: [28, 28], direction: 'left', length: 7 },
-      { start: [28, 21], direction: 'up', length: 7 },
-      { start: [21, 21], direction: 'right', length: 7 },
-      { start: [21, 28], direction: 'down', length: 7 }
-    ],
-    'Top-Left Quadrant (Clockwise)': [
-      { start: [0, 0], direction: 'right', length: 7 },
-      { start: [0, 7], direction: 'down', length: 7 },
-      { start: [7, 7], direction: 'left', length: 7 },
-      { start: [7, 0], direction: 'up', length: 7 }
-    ],
-    'Bottom-Left Quadrant (Clockwise)': [
-      { start: [28, 0], direction: 'up', length: 7 },
-      { start: [21, 0], direction: 'right', length: 7 },
-      { start: [21, 7], direction: 'down', length: 7 },
-      { start: [28, 7], direction: 'left', length: 7 }
-    ]
-  },
-  'Middle Well Reading': {
-    'Vertical & Horizontal': [
-      { start: [7, 21], direction: 'up', length: 7 },
-      { start: [8, 21], direction: 'down', length: 7 },
-      { start: [21, 21], direction: 'left', length: 7 },
-      { start: [21, 8], direction: 'right', length: 7 }
-    ]
-  },
-  'Black Book Reading': {
-    'Top-Right Perimeter': [
-        { start: [1, 27], direction: 'left', length: 6 },
-        { start: [2, 22], direction: 'down', length: 5 },
-        { start: [6, 22], direction: 'right', length: 6 },
-        { start: [1, 22], direction: 'down', length: 5 }
-    ]
-  },
-  'Blue Book Reading': {
-    'Top-Center Horizontal': [
-        { start: [1, 13], direction: 'right', length: 4 },
-        { start: [1, 16], direction: 'right', length: 4 }
-    ]
-  },
-  'Purple Book Reading': {
-    'Top-Right Corner': [
-        { start: [8, 26], direction: 'left', length: 5 },
-        { start: [9, 22], direction: 'down', length: 4 },
-        { start: [13, 22], direction: 'right', length: 5 },
-        { start: [8, 22], direction: 'down', length: 4 }
-    ]
-  },
-  'Yellow Book Reading': {
-    'Center Square': [
-        { start: [11, 13], direction: 'right', length: 3 },
-        { start: [12, 13], direction: 'right', length: 3 },
-        { start: [13, 13], direction: 'right', length: 3 }
-    ]
-  }
-};
-
-function getPoem(methodName, poemName) {
-    const poemPath = poemRules[methodName]?.[poemName];
-    if (!poemPath) {
-        return "Poem not found.";
+function generatePoemFromPath(path) {
+    const poemDisplay = document.getElementById('poem-display');
+    if (!path) {
+        poemDisplay.textContent = "Invalid path.";
+        return;
     }
 
+    // Clear previous highlights
+    document.querySelectorAll('.grid-cell.selected').forEach(cell => {
+        cell.classList.remove('selected');
+    });
+
     let poemText = '';
-    poemPath.forEach(segment => {
+
+    path.forEach(segment => {
         let [row, col] = segment.start;
         for (let i = 0; i < segment.length; i++) {
-            let char = '';
+            let currentRow = row, currentCol = col;
+            let cellToHighlight;
+
             switch (segment.direction) {
-                case 'down':
-                    char = gridData[row + i][col];
-                    break;
-                case 'up':
-                    char = gridData[row - i][col];
-                    break;
-                case 'left':
-                    char = gridData[row][col - i];
-                    break;
-                case 'right':
-                    char = gridData[row][col + i];
-                    break;
+                case 'down': currentRow += i; break;
+                case 'up': currentRow -= i; break;
+                case 'left': currentCol -= i; break;
+                case 'right': currentCol += i; break;
             }
-            poemText += char;
+
+            // Check boundaries
+            if (currentRow >= 0 && currentRow < 29 && currentCol >= 0 && currentCol < 29) {
+                poemText += gridData[currentRow][currentCol];
+                cellToHighlight = document.querySelector(`.grid-cell[data-row="${currentRow}"][data-col="${currentCol}"]`);
+                if (cellToHighlight) {
+                    cellToHighlight.classList.add('selected');
+                }
+            }
         }
     });
 
-    // Add formatting (line breaks after every 7 characters for this specific poem type)
+    // Add formatting
     const lines = [];
     const lineLength = 7;
     for (let i = 0; i < poemText.length; i += lineLength) {
         lines.push(poemText.substring(i, i + lineLength));
     }
-    return lines.join('\n');
+    poemDisplay.textContent = lines.join('\n');
 }
+
+/*
+ * Data structure for dynamic poem generation rules.
+ */
+const poemRules = {
+  'Four Corners Reading': {
+    isValidStart: (row, col) => {
+        return (row === 0 && col === 0) || (row === 0 && col === 28) ||
+               (row === 28 && col === 0) || (row === 28 && col === 28);
+    },
+    getPath: (row, col) => {
+        if (row === 0 && col === 0) { // Top-Left
+            return [
+                { start: [0, 0], direction: 'right', length: 7 }, { start: [0, 7], direction: 'down', length: 7 },
+                { start: [7, 7], direction: 'left', length: 7 }, { start: [7, 0], direction: 'up', length: 7 }
+            ];
+        }
+        if (row === 0 && col === 28) { // Top-Right
+            return [
+                { start: [0, 28], direction: 'down', length: 7 }, { start: [7, 28], direction: 'left', length: 7 },
+                { start: [7, 21], direction: 'up', length: 7 }, { start: [0, 21], direction: 'right', length: 7 }
+            ];
+        }
+        if (row === 28 && col === 0) { // Bottom-Left
+            return [
+                { start: [28, 0], direction: 'up', length: 7 }, { start: [21, 0], direction: 'right', length: 7 },
+                { start: [21, 7], direction: 'down', length: 7 }, { start: [28, 7], direction: 'left', length: 7 }
+            ];
+        }
+        if (row === 28 && col === 28) { // Bottom-Right
+            return [
+                { start: [28, 28], direction: 'left', length: 7 }, { start: [28, 21], direction: 'up', length: 7 },
+                { start: [21, 21], direction: 'right', length: 7 }, { start: [21, 28], direction: 'down', length: 7 }
+            ];
+        }
+    }
+  },
+  'Middle Well Reading': {
+      isValidStart: (row, col) => row === 7 && col === 21,
+      getPath: (row, col) => [
+          { start: [7, 21], direction: 'up', length: 7 }, { start: [8, 21], direction: 'down', length: 7 },
+          { start: [21, 21], direction: 'left', length: 7 }, { start: [21, 8], direction: 'right', length: 7 }
+      ]
+  },
+  'Black Book Reading': {
+      isValidStart: (row, col) => row === 1 && col === 27,
+      getPath: (row, col) => [
+          { start: [1, 27], direction: 'left', length: 6 }, { start: [2, 22], direction: 'down', length: 5 },
+          { start: [6, 22], direction: 'right', length: 6 }, { start: [1, 22], direction: 'down', length: 5 }
+      ]
+  },
+  'Blue Book Reading': {
+      isValidStart: (row, col) => row === 1 && (col === 13 || col === 16),
+      getPath: (row, col) => {
+          if (col === 13) return [{ start: [1, 13], direction: 'right', length: 4 }];
+          if (col === 16) return [{ start: [1, 16], direction: 'right', length: 4 }];
+      }
+  },
+  'Purple Book Reading': {
+      isValidStart: (row, col) => row === 8 && col === 26,
+      getPath: (row, col) => [
+          { start: [8, 26], direction: 'left', length: 5 }, { start: [9, 22], direction: 'down', length: 4 },
+          { start: [13, 22], direction: 'right', length: 5 }, { start: [8, 22], direction: 'down', length: 4 }
+      ]
+  },
+  'Yellow Book Reading': {
+      isValidStart: (row, col) => (row >= 11 && row <= 13) && col === 13,
+      getPath: (row, col) => [{ start: [row, 13], direction: 'right', length: 3 }]
+  }
+};
 
 async function translateText(text, apiKey) {
     const url = `https://translation.googleapis.com/language/translate/v2?key=${apiKey}`;
-    // The API expects the text to be split by newlines to be passed as multiple 'q' values.
-    // However, for simplicity and to maintain poem structure, we'll send it as a single block.
-    // The API should handle newline characters correctly.
-    const body = {
-        q: text,
-        target: 'en',
-        source: 'zh'
-    };
-
+    const body = { q: text, target: 'en', source: 'zh' };
     try {
         const response = await fetch(url, {
             method: 'POST',
             body: JSON.stringify(body),
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' }
         });
-
         if (!response.ok) {
             const errorData = await response.json();
             console.error('Translation API Error:', errorData);
             return `Translation failed: ${errorData.error.message}`;
         }
-
         const data = await response.json();
         const translatedText = data.data.translations[0].translatedText;
-        // The API often HTML-encodes characters, so we need to decode them.
         const decodedText = new DOMParser().parseFromString(translatedText, "text/html").documentElement.textContent;
         return decodedText;
-
     } catch (error) {
         console.error('Network error during translation:', error);
         return 'Error: Could not connect to the translation service.';
