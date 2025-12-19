@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Gauge Interpreter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="grid-container">
+            <h1>Star Gauge</h1>
+            <div id="grid"></div>
+        </div>
+        <div class="controls-container">
+            <h2>Controls</h2>
+            <div id="controls">
+                <select id="poem-select"></select>
+                <button id="generate-btn">Generate</button>
+            </div>
+            <h2>Poem</h2>
+            <div id="poem-display"></div>
+            <button id="translate-btn">Translate</button>
+            <h2>Translation</h2>
+            <div id="translation-display"></div>
+            <button id="settings-btn">Settings</button>
+        </div>
+    </div>
+
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2>Settings</h2>
+            <p>Enter your Google Cloud Translation API Key:</p>
+            <input type="password" id="api-key-input" placeholder="API Key">
+            <button id="save-api-key-btn">Save</button>
+            <div id="api-key-instructions">
+                <h4>How to get a Google Cloud Translation API Key:</h4>
+                <ol>
+                    <li>Go to the <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a>.</li>
+                    <li>Create a new project or select an existing one.</li>
+                    <li>Enable the "Cloud Translation API" for your project.</li>
+                    <li>Create credentials for the API. Choose "API Key".</li>
+                    <li>Copy the generated API key and paste it into the field above.</li>
+                    <li><strong>Important:</strong> For security, it's recommended to restrict your API key to only be usable by the domain where this application is hosted.</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

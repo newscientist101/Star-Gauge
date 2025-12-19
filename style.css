@@ -1,0 +1,140 @@
+body {
+    font-family: 'Noto Sans SC', "Microsoft YaHei", "SimHei", sans-serif;
+    display: flex;
+    justify-content: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.grid-container, .controls-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(29, 1fr);
+    grid-template-rows: repeat(29, 1fr);
+    border: 1px solid #ccc;
+    aspect-ratio: 1 / 1;
+}
+
+.grid-cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1vw; /* Responsive font size */
+    border: 1px solid #eee;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s;
+}
+
+.grid-cell:hover {
+    background-color: #e0e0e0;
+}
+
+.grid-cell.selected {
+    background-color: #a0a0a0;
+    color: white;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+#poem-display {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    min-height: 100px;
+    background-color: #fafafa;
+    white-space: pre-wrap;
+}
+
+/* Settings Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#api-key-input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#save-api-key-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+}
+
+#save-api-key-btn:hover {
+    background-color: #45a049;
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-cell {
+        font-size: 2.5vw; /* Increase font size for better readability on smaller screens */
+    }
+}
