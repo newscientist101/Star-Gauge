@@ -120,6 +120,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const poemSelect = document.getElementById('poem-select');
     const poemDisplay = document.getElementById('poem-display');
     const gridElement = document.getElementById('grid');
+    const explanationDiv = document.getElementById('rule-explanation');
+
+    function updateExplanation() {
+        const selectedMethod = poemSelect.value;
+        const rule = poemRules[selectedMethod];
+        if (rule && rule.description) {
+            explanationDiv.textContent = rule.description;
+        } else {
+            explanationDiv.textContent = '';
+        }
+    }
 
     function populatePoemSelector() {
         poemSelect.innerHTML = ''; // Clear existing options
@@ -132,6 +143,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     populatePoemSelector();
+    updateExplanation(); // Initial call to display description for the default selection
+    poemSelect.addEventListener('change', updateExplanation);
 
     gridElement.addEventListener('click', (event) => {
         if (!event.target.classList.contains('grid-cell')) return;
@@ -219,6 +232,7 @@ function generatePoemFromPath(path) {
  */
 const poemRules = {
   'Four Corners Reading': {
+    description: "Click one of the four corner characters to generate a 28-character poem by tracing a 7x7 square.",
     isValidStart: (row, col) => {
         return (row === 0 && col === 0) || (row === 0 && col === 28) ||
                (row === 28 && col === 0) || (row === 28 && col === 28);
@@ -251,6 +265,7 @@ const poemRules = {
     }
   },
   'Middle Well Reading': {
+      description: "Click the character at (7, 21) to generate a 28-character poem from the center.",
       isValidStart: (row, col) => row === 7 && col === 21,
       getPath: (row, col) => [
           { start: [7, 21], direction: 'up', length: 7 }, { start: [8, 21], direction: 'down', length: 7 },
@@ -258,6 +273,7 @@ const poemRules = {
       ]
   },
   'Black Book Reading': {
+      description: "Click the character at (1, 27) to generate a 22-character poem from the black-colored characters.",
       isValidStart: (row, col) => row === 1 && col === 27,
       getPath: (row, col) => [
           { start: [1, 27], direction: 'left', length: 6 }, { start: [2, 22], direction: 'down', length: 5 },
@@ -265,6 +281,7 @@ const poemRules = {
       ]
   },
   'Blue Book Reading': {
+      description: "Click on a valid blue starting character at (1, 13) or (1, 16) to generate a 4-character poem.",
       isValidStart: (row, col) => row === 1 && (col === 13 || col === 16),
       getPath: (row, col) => {
           if (col === 13) return [{ start: [1, 13], direction: 'right', length: 4 }];
@@ -272,6 +289,7 @@ const poemRules = {
       }
   },
   'Purple Book Reading': {
+      description: "Click the character at (8, 26) to generate a 18-character poem from the purple-colored characters.",
       isValidStart: (row, col) => row === 8 && col === 26,
       getPath: (row, col) => [
           { start: [8, 26], direction: 'left', length: 5 }, { start: [9, 22], direction: 'down', length: 4 },
@@ -279,6 +297,7 @@ const poemRules = {
       ]
   },
   'Yellow Book Reading': {
+      description: "Click on any of the three yellow characters in column 13 to generate a 3-character poem.",
       isValidStart: (row, col) => (row >= 11 && row <= 13) && col === 13,
       getPath: (row, col) => [{ start: [row, 13], direction: 'right', length: 3 }]
   }
