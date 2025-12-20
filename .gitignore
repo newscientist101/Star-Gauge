@@ -177,3 +177,5 @@ test-results
 .eslintcache
 playwright.env
 /firefox/
+package-lock.json
+package.json
