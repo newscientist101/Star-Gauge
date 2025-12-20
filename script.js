@@ -38,6 +38,14 @@ function getCharColor(row, col) {
         return 'red';
     }
 
+    // Black
+    if ((row >= 1 && row <= 6 && col >= 1 && col <= 6) ||      // Top-left
+        (row >= 1 && row <= 6 && col >= 22 && col <= 27) ||     // Top-right
+        (row >= 22 && row <= 27 && col >= 1 && col <= 6) ||     // Bottom-left
+        (row >= 22 && row <= 27 && col >= 22 && col <= 27)) {   // Bottom-right
+        return 'black';
+    }
+
     // Green
     if (row >= 13 && row <= 15 && col >= 13 && col <= 15) {
         return 'green';
@@ -58,40 +66,6 @@ function getCharColor(row, col) {
         (row >= 12 && row <= 16 && col >= 8 && col <= 11) ||
         (row >= 12 && row <= 16 && col >= 17 && col <= 20)) {
         return 'purple';
-    }
-
-    // Black
-    // Top-left
-    if (row >= 1 && row <= 6 && col >= 1 && col <= 6) {
-        const localRow = row - 1;
-        const localCol = col - 1;
-        if (localRow === 0 || localRow === 5 || localCol === 0 || localCol === 5 || localRow === localCol || localRow + localCol === 5) {
-            return 'black';
-        }
-    }
-    // Top-right
-    if (row >= 1 && row <= 6 && col >= 22 && col <= 27) {
-        const localRow = row - 1;
-        const localCol = col - 22;
-        if (localRow === 0 || localRow === 5 || localCol === 0 || localCol === 5 || localRow === localCol || localRow + localCol === 5) {
-            return 'black';
-        }
-    }
-    // Bottom-left
-    if (row >= 22 && row <= 27 && col >= 1 && col <= 6) {
-        const localRow = row - 22;
-        const localCol = col - 1;
-        if (localRow === 0 || localRow === 5 || localCol === 0 || localCol === 5 || localRow === localCol || localRow + localCol === 5) {
-            return 'black';
-        }
-    }
-    // Bottom-right
-    if (row >= 22 && row <= 27 && col >= 22 && col <= 27) {
-        const localRow = row - 22;
-        const localCol = col - 22;
-        if (localRow === 0 || localRow === 5 || localCol === 0 || localCol === 5 || localRow === localCol || localRow + localCol === 5) {
-            return 'black';
-        }
     }
 
     // Blue
