@@ -52,11 +52,16 @@ function getCharColor(row, col) {
     }
 
     // Yellow
-    if ((row >= 9 && row <= 12 && col >= 9 && col <= 12) ||
-        (row >= 9 && row <= 12 && col >= 17 && col <= 20) ||
-        (row >= 17 && row <= 20 && col >= 9 && col <= 12) ||
-        (row >= 17 && row <= 20 && col >= 17 && col <= 20) ||
-        (row >= 13 && row <= 16 && col >= 13 && col <= 16)) {
+    if ( // Central 5x5 box
+        (row >= 12 && row <= 16 && col >= 12 && col <= 16) ||
+        // Top-left 4x4 box
+        (row >= 10 && row <= 13 && col >= 8 && col <= 11) ||
+        // Top-right 4x4 box
+        (row >= 10 && row <= 13 && col >= 17 && col <= 20) ||
+        // Bottom-left 4x4 box
+        (row >= 15 && row <= 18 && col >= 8 && col <= 11) ||
+        // Bottom-right 4x4 box
+        (row >= 15 && row <= 18 && col >= 17 && col <= 20)) {
         return 'yellow';
     }
 
