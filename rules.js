@@ -1,30 +1,32 @@
 const poemRules = {
-  'Four-way, Four-corner Red-character Reading': {
-    description: "This method reads the perimeter of an 8x8 block of characters, starting from one of the four corners of the grid. Valid starting cells are (0,0), (0,28), (28,0), and (28,28).",
+  'Four-corner Red-character Reading': {
+    description: "This method reads the perimeter of an 8x8 block of red characters, starting from one of the four corners of the grid.",
     isValidStart: (row, col) => {
-        return (row === 0 && col === 0) || (row === 0 && col === 28) ||
-               (row === 28 && col === 0) || (row === 28 && col === 28);
+        return (((row === 0 || row === 7) && col >= 0 && col <= 7) || ((col === 0 || col === 7) && row >= 0 && row <= 7)) || 
+        (((row === 0 || row === 7) && col >= 21 && col <= 28) || ((col === 21 || col === 28) && row >= 0 && row <= 7)) ||
+        (((row === 21 || row === 28) && col >= 0 && col <= 7) || ((col === 0 || col === 7) && row >= 21 && row <= 28)) || 
+        (((row === 21 || row === 28) && col >= 21 && col <= 28) || ((col === 21 || col === 28) && row >= 21 && row <= 28));
     },
     getPath: (row, col) => {
-        if (row === 0 && col === 0) { // Top-Left
+        if (((row === 0 || row === 7) && col >= 0 && col <= 7) || ((col === 0 || col === 7) && row >= 0 && row <= 7)) { // Top-Left
             return [
                 { start: [0, 0], direction: 'right', length: 7 }, { start: [0, 7], direction: 'down', length: 7 },
                 { start: [7, 7], direction: 'left', length: 7 }, { start: [7, 0], direction: 'up', length: 7 }
             ];
         }
-        if (row === 0 && col === 28) { // Top-Right
+        if (((row === 0 || row === 7) && col >= 21 && col <= 28) || ((col === 21 || col === 28) && row >= 0 && row <= 7)) { // Top-Right
             return [
                 { start: [0, 28], direction: 'down', length: 7 }, { start: [7, 28], direction: 'left', length: 7 },
                 { start: [7, 21], direction: 'up', length: 7 }, { start: [0, 21], direction: 'right', length: 7 }
             ];
         }
-        if (row === 28 && col === 0) { // Bottom-Left
+        if (((row === 21 || row === 28) && col >= 0 && col <= 7) || ((col === 0 || col === 7) && row >= 21 && row <= 28)) { // Bottom-Left
             return [
                 { start: [28, 0], direction: 'up', length: 7 }, { start: [21, 0], direction: 'right', length: 7 },
                 { start: [21, 7], direction: 'down', length: 7 }, { start: [28, 7], direction: 'left', length: 7 }
             ];
         }
-        if (row === 28 && col === 28) { // Bottom-Right
+        if (((row === 21 || row === 28) && col >= 21 && col <= 28) || ((col === 21 || col === 28) && row >= 21 && row <= 28)) { // Bottom-Right
             return [
                 { start: [28, 28], direction: 'left', length: 7 }, { start: [28, 21], direction: 'up', length: 7 },
                 { start: [21, 21], direction: 'right', length: 7 }, { start: [21, 28], direction: 'down', length: 7 }
