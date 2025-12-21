@@ -31,34 +31,49 @@ const gridData = [
 ];
 
 function getCharColor(row, col) {
-    const size = 29;
-    const center = 14;
-
-    if (row === 0 || row === size - 1 || col === 0 || col === size - 1 || row === center || col === center) {
+    // Red
+    if (row === 0 || row === 28 || col === 0 || col === 28 ||
+        row === 7 || row === 21 || col === 7 || col === 21 ||
+        (row === 14 && col === 14)) {
         return 'red';
     }
 
-    const x = col > center ? size - 1 - col : col;
-    const y = row > center ? size - 1 - row : row;
-
-    if (y >= 1 && y <= 6 && x >= 1 && x <= 6) {
-        if (y === 1 || y === 6 || x === 1 || x === 6 || x === y || x + y === 7) {
-            return 'black';
-        }
+    // Black
+    if ((row >= 1 && row <= 6 && col >= 1 && col <= 6) ||      // Top-left
+        (row >= 1 && row <= 6 && col >= 22 && col <= 27) ||     // Top-right
+        (row >= 22 && row <= 27 && col >= 1 && col <= 6) ||     // Bottom-left
+        (row >= 22 && row <= 27 && col >= 22 && col <= 27)) {   // Bottom-right
+        return 'black';
     }
 
-    if (y >= 8 && y <= 13 && x >= 8 && x <= 13) {
-        const localX = x - 7;
-        const localY = y - 7;
-        if (localY === 1 || localY === 6 || localX === 1 || localX === 6 || localX === localY || localX + localY === 7) {
-            return 'purple';
-        }
+    // Green
+    if (row >= 13 && row <= 15 && col >= 13 && col <= 15) {
+        return 'green';
     }
 
-    if (y >= 11 && y <= 13 && x >= 11 && x <= 13) {
+    // Yellow
+    if ( // Central 5x5 box
+        (row >= 12 && row <= 16 && col >= 12 && col <= 16) ||
+        // Top-left 4x4 box
+        (row >= 10 && row <= 13 && col >= 8 && col <= 11) ||
+        // Top-right 4x4 box
+        (row >= 10 && row <= 13 && col >= 17 && col <= 20) ||
+        // Bottom-left 4x4 box
+        (row >= 15 && row <= 18 && col >= 8 && col <= 11) ||
+        // Bottom-right 4x4 box
+        (row >= 15 && row <= 18 && col >= 17 && col <= 20)) {
         return 'yellow';
     }
 
+    // Purple
+    if ((row >= 8 && row <= 11 && col >= 12 && col <= 16) ||
+        (row >= 17 && row <= 20 && col >= 12 && col <= 16) ||
+        (row >= 12 && row <= 16 && col >= 8 && col <= 11) ||
+        (row >= 12 && row <= 16 && col >= 17 && col <= 20)) {
+        return 'purple';
+    }
+
+    // Blue
     return 'blue';
 }
 
