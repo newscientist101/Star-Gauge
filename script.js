@@ -114,7 +114,7 @@ function getCharColor(row, col) {
     return 'blue';
 }
 
-function generateGrid(version = poemVersions['Wikipedia'].gridData) {
+function generateGrid(version = poemVersions['stargaugepoem.com'].gridData) {
     const gridElement = document.getElementById('grid');
     gridElement.innerHTML = ''; // Clear existing grid
     version.forEach((row, rowIndex) => {
